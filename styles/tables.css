@@ -1,0 +1,81 @@
+
+.thead-dark{ 
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.table .thead-dark th {
+    color: white;
+    background-color: #007bff;
+}
+
+.table-responsive { 
+    height:70vh;
+    width: 40%;
+    margin-left: 15%;
+    font-size: 11px;
+    margin-top: -9px;
+}
+
+#iconDelete{
+    font-size: 20px;
+    color: #dc3545;
+}
+
+#iconView{
+    font-size: 20px;
+    color: #17a2b8;
+}
+
+.total{
+    width: 15vh;
+    margin-left: 2%;    
+}
+
+h4{
+    background-color: #3c578b ;
+    color: white;
+    height: 35px;
+    width: 40%;     
+    margin-left: 15%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5%;
+}
+
+.container
+{
+    display: flex;
+    margin-top: 1%;
+    margin-left: 13.5%;
+}
+
+.form-group
+{
+    margin-left: 10px;
+}
+
+#btnExport
+{
+    margin-top: 2.2rem;
+    margin-left:4rem;
+    font-size: medium;
+}
+
+#contQuickSearch
+{
+    margin-left: 4rem;
+}
+
+#userBtn
+{
+    font-size: 2.5rem;
+    cursor: pointer;
+}
+
+input
+{
+    width: 80px;
+}

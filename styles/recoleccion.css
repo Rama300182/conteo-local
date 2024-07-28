@@ -1,0 +1,124 @@
+body {
+    margin: 0;
+    font-family: 'Roboto Condensed', sans-serif;
+    height: 600px;
+}
+
+@media (min-width: 360px) {
+    .principal {
+        width: auto;
+        /* background-color: red; */
+    }
+
+    .principal--encabezado {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        /*  background-color: aqua; */
+    }
+
+    .principal__elemento i {
+        font-size: 2.5rem;
+    }
+
+    .principal__elemento i.fa-circle-xmark {
+        color: rgb(131, 5, 5);
+    }
+
+    .principal__elemento i.fa-square-check {
+        color: rgb(5, 131, 5);
+    }
+
+    .principal--conteo {
+        display: inline-block;
+    }
+
+    .principal--buscar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .principal--buscar__ele {
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .principal--buscar__ele input {
+        border: 1px solid rgb(0, 0, 0);
+        border-radius: 5px;
+        height: 3rem;
+        width: 70vw;
+        text-align: center;
+
+        box-sizing: border-box;
+        /*   border: 3px solid #ccc; */
+        -webkit-transition: 0.5s;
+        transition: 0.5s;
+        outline: none;
+    }
+    .principal--buscar__ele input:focus{
+        border: 3px solid rgb(64, 141, 230);
+    }
+    .principal--conteo {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .principal--conteo p {
+        display: inline-block;
+        text-align: left;
+        margin-right: 2.5rem;
+        font-weight: 900;
+    }
+
+    .table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        border: 1px solid rgb(255, 255, 255);
+    }
+
+    th,
+    td {
+        text-align: center;
+       /*  padding: 8px; */
+        font-size: 0.8rem;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
+    .fa-trash-can
+    {
+        color: #DC3545;
+        font-size:1rem ;
+    }
+
+    /****/
+
+    /* .principal
+    {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 50px;
+        z-index: 1030;
+    } */
+
+    .thead-fixed{ 
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #007bff;
+        color: white;
+    } 
+    
+}
