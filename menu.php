@@ -205,6 +205,8 @@ if (!isset($_SESSION['username'])) {
   <!-- Menu Toggle Script -->
   <script src="js/sidebar.js?ver=2"></script>
   <script src="js/user.js"></script>
+  <script src="js/iniciar.js"></script>
+  
     <!-- Plugin to export Excel -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
