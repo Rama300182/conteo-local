@@ -5,8 +5,10 @@
     var user = document.getElementById('user').value;
     var pass = document.getElementById('pass').value;
     var rol = document.getElementById('rol').value;
+    var dsn = document.getElementById('dsn').value;
+    var numsuc = document.getElementById('numsuc').value;
 
-    if(nombre != '' && user != '' && pass != '' && rol != ''){
+    if(nombre != '' && user != '' && pass != '' && rol != '' && dsn != '' && numsuc != ''){
         Swal.fire({
             icon: 'info',
             title: 'Desea crear el usuario?',
@@ -27,6 +29,8 @@
                         user: user,
                         pass: pass,
                         rol: rol,
+                        numsuc: numsuc,
+                        dsn: dsn,
                     },
                 });
                 Swal.fire('Usuario creado correctamente!', '', 'success')

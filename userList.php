@@ -3,6 +3,8 @@
 include('header.php');
 require 'Class/usuario.php';
 
+$numsuc = isset($_SESSION['numsuc']) ? $_SESSION['numsuc'] : null;
+
 $user = new Usuario();
 
 ?>
@@ -11,7 +13,7 @@ $user = new Usuario();
 
     <?php
         
-        $todosLosUsuarios = $user->traerUsuarios();
+        $todosLosUsuarios = $user->traerUsuarios($numsuc);
         $i=1;
         ?>
 
@@ -21,7 +23,7 @@ $user = new Usuario();
             <table class="table table-hover table-bordered table-striped text-center" id="table">
                 <thead class="thead-dark">
                     <th scope="col" style="width: 1%; text-align: center">N°</th>
-                    <th scope="col" style="width: 3%; text-align: center">NOMBRE Y APELLIDO</th>
+                    <th scope="col" style="width: 10%; text-align: center">NOMBRE Y APELLIDO</th>
                     <th scope="col" style="width: 1%; text-align: center">USUARIO</th>
                     <th scope="col" style="width: 1%; text-align: center">CONTRASEÑA</th>
                     <th scope="col" style="width: 5%; text-align: center">ROL</th>

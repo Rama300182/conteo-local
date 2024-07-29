@@ -67,4 +67,18 @@ class Inventario
 
     }
 
+    public function traerRubros()
+    {
+
+        $sql = "SELECT RUBRO FROM SOF_RUBROS_TANGO 
+                WHERE RUBRO NOT IN ('_KITS','ALHAJEROS','PACKAGING')
+                GROUP BY RUBRO 
+                ORDER BY 1";
+
+        $rows = $this->retornarArray($sql);
+        
+        return $rows;
+
+    }
+
 }

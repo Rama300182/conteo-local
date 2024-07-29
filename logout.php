@@ -1,5 +1,5 @@
 <?php
 @session_start();
 session_destroy();
-header("Location: ../logistica/login.php");
-?>
+header("Location: ../conteoLocal/login.php");
+?>  

@@ -1,10 +1,16 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-  header("Location:../../../logistica/login.php");
+  header("Location:../../../conteoLocal/login.php");
 } else {
 
   $usuario = $_SESSION['username'];
+
+  require_once 'Class/inventario.php';
+
+  $rubro = new inventario();
+  $todosLosRubros = $rubro->traerRubros();
+
 
 ?>
 
@@ -15,7 +21,7 @@ if (!isset($_SESSION['username'])) {
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SIAC MANAGER</title>
+  <title>Conteo Stock Local</title>
   <link rel="shortcut icon" href="images/favicon.png">
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
@@ -28,6 +34,7 @@ if (!isset($_SESSION['username'])) {
   <!-- Including Font Awesome CSS from CDN to show icons -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <link href="styles/menu.css" rel="stylesheet">
   <link href="styles/user.css" rel="stylesheet">
@@ -48,7 +55,7 @@ if (!isset($_SESSION['username'])) {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"> <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span><span class="logo"> AGILE CLOUD INVENTORY</span> 
+          <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"> <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span><span class="logo"> Conteo Stock Local</span> 
           </a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -56,12 +63,6 @@ if (!isset($_SESSION['username'])) {
           <ul class="nav navbar-nav navbar-right">
           
             <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?= $usuario;?> <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Profile</a>
-                </li>
-                <li><a href="#"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Settings </a>
-                </li>
-              </ul>
             </li>
             <li><a href="logout.php"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
             </li>
@@ -99,12 +100,23 @@ if (!isset($_SESSION['username'])) {
       <!-- Page Content -->
       <div id="main-page-content">
         <div class="container-fluid">
-          <h1>AGILE CLOUD INVENTORY</h1>
+          <h1>Conteo Stock Local</h1>
           <div class="row">
             <div class="col-lg-12">
               <div class="panel panel-default">
-                <div class="panel-heading">Administrar Inventario</div>
+                <div class="panel-heading">Administrar Conteo</div>
                 <div class="panel-body" id="feature-content">
+
+                  <a type="button" data-toggle="modal" data-target="#modalAddConteo" style="cursor:pointer">
+                    <div class="col-md-4">
+                      <div class="panel panel-primary">
+                        <div class="panel-body text-center btn-info">
+                          <span class="bi bi-clipboard-pulse icon-big" aria-hidden="true"></span>
+                          <h3>Comenzar Conteo</h3>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
 
                   <a href="inventarioArea.php">
                     <div class="col-md-4">
@@ -122,7 +134,7 @@ if (!isset($_SESSION['username'])) {
                       <div class="panel panel-primary">
                         <div class="panel-body text-center btn-success btn_inventario">
                           <span class="glyphicon glyphicon-save icon-big" aria-hidden="true"></span>
-                          <h3><button type="submit" style="border:none;color:white;background:none">Inventario</button></h3>
+                          <h3><button type="submit" style="border:none;color:white;background:none">Descargar Conteo</button></h3>
                         </div>
                       </div>
                     </div>
@@ -132,7 +144,7 @@ if (!isset($_SESSION['username'])) {
                     <div class="panel panel-primary">
                       <div class="panel-body text-center btn-danger btn-borrar">
                         <span class="glyphicon glyphicon-trash icon-big" aria-hidden="true"></span>
-                        <h3>Borrar Inventario</h3>
+                        <h3>Borrar Conteo</h3>
                       </div>
                     </div>
                   </div>
@@ -205,8 +217,7 @@ if (!isset($_SESSION['username'])) {
 }
 ?>
 
-<script>
-  $("#myModal").modal('toggle');
+<script>¿
 
   $('ul').on('click', function(){
     $('.collapse').collapse('hide');
@@ -216,6 +227,7 @@ if (!isset($_SESSION['username'])) {
 
 <?php
 
+include('./addConteo.php');
 include('./addUser.php');
 
 ?>

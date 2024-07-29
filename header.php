@@ -48,7 +48,7 @@ $usuario = $_SESSION['username'];
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"> <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>  <span class="logo">SIAC MANAGER</span> 
+          <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"> <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>  <span class="logo">Conteo Stock Local</span> 
           </a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -56,12 +56,6 @@ $usuario = $_SESSION['username'];
           <ul class="nav navbar-nav navbar-right">
           
             <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?= $usuario;?> <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Profile</a>
-                </li>
-                <li><a href="#"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Settings </a>
-                </li>
-              </ul>
             </li>
             <li><a href="logout.php"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
             </li>

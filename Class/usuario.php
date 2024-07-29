@@ -24,12 +24,12 @@ class Usuario
     }
 
 
-    public function traerUsuarios()
+    public function traerUsuarios($numsuc)
     {
 
         $sql = "SELECT DESCRIPCION NOMBRE, NOMBRE USUARIO, PASS, 
-                CASE WHEN PERMISOS = '5' THEN 'OPERADOR' WHEN PERMISOS = '6' THEN 'ADMINISTRADOR' ELSE 'DESCONOCIDO' END ROL 
-                FROM SOF_USUARIOS WHERE TIPO = 'LOGISTICA'";
+                CASE WHEN PERMISOS = '5' THEN 'OPERADOR' WHEN PERMISOS = '1' THEN 'ADMINISTRADOR' ELSE 'DESCONOCIDO' END ROL 
+                FROM SOF_USUARIOS WHERE TIPO = 'LOCAL_PROPIO' AND NRO_SUCURS = '$numsuc'";
 
         $rows = $this->retornarArray($sql);
         

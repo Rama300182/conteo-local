@@ -59,6 +59,8 @@
                                     <button class="btn btn-success" type="button" id="buttonSaveUser" onclick="guardarUsuario()">Guardar</button>
                                 </div>
                             </div> -->
+                            <input type="hidden" id="numsuc" name="numsuc" value="<?php echo $_SESSION['numsuc']; ?>">
+                            <input type="hidden" id="dsn" name="dsn" value="<?php echo $_SESSION['dsn']; ?>">
                         </fieldset>
                     </form>
                 </div>
