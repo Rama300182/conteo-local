@@ -31,7 +31,7 @@ function procesar(e) {
         {
           icon: "error",
           title: "Error",
-          text: "Ubicación no encontrada " + conexion.responseText,
+          text: "Area no encontrada " + conexion.responseText,
         },
         cancel.play(),
         e.preventDefault()
@@ -62,7 +62,7 @@ function BuscarUbicacion(e) {
           icon: "error",
           title: "Error",
           text:
-            "Ya se realizó el inventario en esta ubicacion" +
+            "Ya se realizó el inventario en esta area" +
             conexion.responseText,
         },
         cancel.play(),

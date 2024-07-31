@@ -38,12 +38,12 @@ if (!isset($_SESSION['username'])) {
           <i class="fa-solid fa-circle-xmark"></i>
         </div>
         <div class="principal__elemento">
-          <h1 id="numDeposito"><?= $ubicacion ?></h1>
+          <h5 id="numDeposito">Area: <?= $ubicacion ?></h5>
         </div>
         <div class="principal__elemento">
           <i class="fa-solid fa-square-check"></i>
         </div>
-      </div>
+      </div>  
       <div class="principal--buscar">
         <div class="principal--buscar__ele">
           <input type="search" placeholder="escanear articulo..." id="buscarArticulo" />
@@ -55,15 +55,15 @@ if (!isset($_SESSION['username'])) {
       <div class="principal--opciones"></div>
       <div class="principal--conteo">
         <p>Ult.Ingresado: <span id="ultCodigo"></span> </p>
-        <p>TOTAL: <span id="total">0</span></p>
+        <p>Total: <span id="total">0</span></p>
       </div>
     </div>
     <table class="table">
       <thead class="thead-fixed">
         <tr>
-          <th>CÓDIGO</th>
-          <th>DESCRIPCIÓN</th>
-          <th>CANT</th>
+          <th style="width:7rem;">CÓDIGO</th>
+          <th style="width:15rem;">DESCRIPCIÓN</th>
+          <th style="width:1rem;">CANT</th>
           <th></th>
         </tr>
       </thead>

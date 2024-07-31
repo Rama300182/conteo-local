@@ -1,4 +1,3 @@
-let bton_BorrarInventario = document.querySelector(".btn-borrar");
 
 //Busqueda rapida//
 
@@ -163,33 +162,6 @@ $(document).ready(() => {
     });
   });
 });
-
-
-// para que conviva addEvent y ready funcion colocar evento de bton_borrarinventario despues de bton_delete
-bton_BorrarInventario.addEventListener("click", borrarInventario);
-
-//Borrar Inventario//
-
-let conexion;
-function borrarInventario() {
-  conexion = new XMLHttpRequest();
-  Swal.fire({
-    title: "Desea borrar el inventario?",
-    text: "Se borrara de forma permanente!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    cancelButtonText: "Cancelar",
-    confirmButtonText: "Aceptar",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      conexion.onreadystatechange = procesar;
-      conexion.open("GET", "controller/borrarInventario.php", false);
-      conexion.send();
-    }
-  });
-}
 
 function procesar() {
   if (conexion.readyState == 4 && conexion.status == 200) {

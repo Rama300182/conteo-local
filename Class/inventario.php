@@ -70,10 +70,10 @@ class Inventario
     public function traerRubros()
     {
 
-        $sql = "SELECT RUBRO FROM SOF_RUBROS_TANGO 
-                WHERE RUBRO NOT IN ('_KITS','ALHAJEROS','PACKAGING')
-                GROUP BY RUBRO 
-                ORDER BY 1";
+        $sql = "SELECT IDFOLDER, RUBRO FROM SOF_RUBROS_TANGO 
+                WHERE IDFOLDER NOT IN ('3','15','31')
+                GROUP BY IDFOLDER, RUBRO 
+                ORDER BY 2";
 
         $rows = $this->retornarArray($sql);
         

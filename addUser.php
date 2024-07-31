@@ -70,8 +70,8 @@
 
       </div class="row">
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-        <button class="btn btn-success" type="button" onclick="guardarUsuario()">Guardar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="bi bi-x-circle"></i> Cerrar</button>
+        <button class="btn btn-success" type="button" onclick="guardarUsuario()"><i class="bi bi-floppy2-fill"></i> Guardar</button>
       </div>
     </div>
   </div>

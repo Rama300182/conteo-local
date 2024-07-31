@@ -21,8 +21,8 @@ if (!isset($_SESSION['username'])) {
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Conteo Stock Local</title>
-  <link rel="shortcut icon" href="images/favicon.png">
+  <title>Conteo Stock</title>
+  <link rel="shortcut icon" href="images/caja.png"/>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
   <!-- bootstrap jquery -->
@@ -46,7 +46,7 @@ if (!isset($_SESSION['username'])) {
     <!-- boostrap wrapper -->
     <div id="wrapper">
       <!-- Navigation -->
-      <nav class="navbar navbar-blue navbar-fixed-top">
+      <nav class="navbar navbar-purple navbar-fixed-top">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -55,7 +55,7 @@ if (!isset($_SESSION['username'])) {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"> <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span><span class="logo"> Conteo Stock Local</span> 
+          <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"> <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span><span class="logo"> Conteo Stock</span> 
           </a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -74,25 +74,31 @@ if (!isset($_SESSION['username'])) {
     </nav>
       <!-- Boostrap Sidebar  - Collapsible Menu Items -->
       <!-- Sidebar -->
-      <div id="bootstrap-sidebar" class="cyan-theme text-menu">
+      <div id="bootstrap-sidebar" class="blue-theme text-menu">
         <ul class="sidebar-nav">
           <li class="active"> <a href="#"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span> <span class="menu-text">Home</span></a>
           </li>
-          <li> <a href="javascript:;" data-toggle="collapse" data-target="#menu1"></i> <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Reportes<b class="caret"></b></a>
+          <li> <a href="javascript:;" data-toggle="collapse" data-target="#menu1"></i> <span class="bi bi-clipboard2-data-fill" aria-hidden="true"></span> Conteo<b class="caret"></b></a>
             <ul id="menu1" class="collapse">
               <li><a href="inventarioArea.php">Totales por Area</a></li>
               <li><a href="inventarioArticulo.php">Totales por Articulo</a></li>
               <li><a href="inventarioDetallado.php">Detallado por Area</a></li>
             </ul>
           </li>
-          <li> <a href="javascript:;" data-toggle="collapse" data-target="#menu2"></i> <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Usuarios<b class="caret"></b> </a>
+
+          <li> <a href="javascript:;" data-toggle="collapse" data-target="#menu2"></i> <span class="bi bi-calendar-week-fill" aria-hidden="true"></span> Historial<b class="caret"></b></a>
             <ul id="menu2" class="collapse">
+              <li><a href="">Detallado por Rubro</a></li>
+              <li><a href="">Detallado por Articulo</a></li>
+            </ul>
+          </li>
+
+          <li> <a href="javascript:;" data-toggle="collapse" data-target="#menu3"></i> <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Usuarios<b class="caret"></b> </a>
+            <ul id="menu3" class="collapse">
               <li> <a href="userList.php">Listado</a></li>
               <li> <a href="addUser.php">Agregar</a></li>
               <li> <a href="#">Cambiar Contraseña</a></li>
             </ul>
-          </li>
-          <li> <a href="#"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> <span class="menu-text">Opciones</span></a>
           </li>
         </ul>
       </div>
@@ -100,15 +106,16 @@ if (!isset($_SESSION['username'])) {
       <!-- Page Content -->
       <div id="main-page-content">
         <div class="container-fluid">
-          <h1>Conteo Stock Local</h1>
+          <h1 ><i class="bi bi-box-seam"></i> Conteo Stock</h1>
           <div class="row">
             <div class="col-lg-12">
               <div class="panel panel-default">
                 <div class="panel-heading">Administrar Conteo</div>
                 <div class="panel-body" id="feature-content">
 
-                  <a type="button" data-toggle="modal" data-target="#modalAddConteo" style="cursor:pointer">
-                    <div class="col-md-4">
+                <div class="cards-row">
+                  <form type="button" data-toggle="modal" data-target="#modalAddConteo" style="cursor:pointer">
+                    <div class="card-button">
                       <div class="panel panel-primary">
                         <div class="panel-body text-center btn-info">
                           <span class="bi bi-clipboard-pulse icon-big" aria-hidden="true"></span>
@@ -116,21 +123,43 @@ if (!isset($_SESSION['username'])) {
                         </div>
                       </div>
                     </div>
-                  </a>
+                  </form>
 
-                  <a href="inventarioArea.php">
-                    <div class="col-md-4">
+                  <form style="cursor:pointer">
+                    <div class="card-button">
                       <div class="panel panel-primary">
-                        <div class="panel-body text-center btn-warning">
+                        <div class="panel-body text-center btn-primary btn_inventario">
+                          <span class="bi bi-send-check-fill icon-big" aria-hidden="true"></span>
+                          <h3><button type="submit" style="border:none;color:white;background:none">Finalizar Conteo</button></h3>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+
+                  <div class="card-button" style="cursor:pointer">
+                    <div class="panel panel-primary">
+                      <div class="panel-body text-center btn-warning">
+                        <span class="bi bi-box-arrow-in-down icon-big" aria-hidden="true"></span>
+                        <h3>Descargar Comparativo</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="cards-row">
+                  <form action="inventarioArea.php" method="post" style="cursor:pointer">
+                    <div class="card-button">
+                      <div class="panel panel-primary">
+                        <div class="panel-body text-center btn-danger" onclick="this.closest('form').submit()">
                           <span class="glyphicon glyphicon-remove icon-big" aria-hidden="true"></span>
                           <h3>Eliminar Area</h3>
                         </div>
                       </div>
                     </div>
-                  </a>
-
+                  </form>
+                
                   <form action="controller/exportar.php" style="cursor:pointer">
-                    <div class="col-md-4">
+                    <div class="card-button">
                       <div class="panel panel-primary">
                         <div class="panel-body text-center btn-success btn_inventario">
                           <span class="glyphicon glyphicon-save icon-big" aria-hidden="true"></span>
@@ -139,15 +168,7 @@ if (!isset($_SESSION['username'])) {
                       </div>
                     </div>
                   </form>
-
-                  <div class="col-md-4" style="cursor:pointer">
-                    <div class="panel panel-primary">
-                      <div class="panel-body text-center btn-danger btn-borrar">
-                        <span class="glyphicon glyphicon-trash icon-big" aria-hidden="true"></span>
-                        <h3>Borrar Conteo</h3>
-                      </div>
-                    </div>
-                  </div>
+                </div>
                   
                 </div>
               </div>
@@ -160,8 +181,9 @@ if (!isset($_SESSION['username'])) {
                 <div class="panel-heading">Administrar Usuarios</div>
                 <div class="panel-body" id="feature-content">
 
-                  <a type="button" data-toggle="modal" data-target="#exampleModal" style="cursor:pointer">
-                    <div class="col-md-4">
+                <div class="cards-row">
+                  <form type="button" data-toggle="modal" data-target="#exampleModal" style="cursor:pointer">
+                    <div class="card-button">
                       <div class="panel panel-primary">
                         <div class="panel-body text-center btn-info">
                           <span class="fa fa-user-plus icon-big" aria-hidden="true"></span>
@@ -169,28 +191,19 @@ if (!isset($_SESSION['username'])) {
                         </div>
                       </div>
                     </div>
-                  </a>
+                  </form>
 
-                  <a href="userList.php" style="cursor:pointer">
-                    <div class="col-md-4">
+                  <form action="userList.php" style="cursor:pointer">
+                    <div class="card-button">
                       <div class="panel panel-primary">
-                        <div class="panel-body text-center btn-warning">
+                        <div class="panel-body text-center btn-warning" onclick="this.closest('form').submit()">
                           <span class="fa fa-edit icon-big" aria-hidden="true"></span>
                           <h3>Editar Usuario</h3>
                         </div>
                       </div>
                     </div>
-                  </a>
-
-                  <!-- <div class="col-md-4">
-                    <div class="panel panel-primary">
-                      <div class="panel-body text-center btn-danger">
-                        <span class="glyphicon glyphicon-trash icon-big" aria-hidden="true"></span>
-                        <h3>Borrar Inventario</h3>
-                      </div>
-                    </div>
-                  </div> -->
-
+                  </form>
+                </div>  
 
                 </div>
               </div>

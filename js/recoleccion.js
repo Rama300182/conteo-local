@@ -222,7 +222,7 @@ function cancelar() {
   swalWithBootstrapButtons
     .fire({
       title: "Desea salir?",
-      text: "",
+      text: "Se perdera la información de los artículos escaneados",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Aceptar",

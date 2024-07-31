@@ -8,9 +8,24 @@ $todosLosRubros = $rubro->traerRubros();
 ?>
 
 <style>
-select[multiple], select[size] {
+  select[multiple], select[size] {
     height: 20rem;
-}
+  }
+
+  .small-input {
+    max-width: 120px;
+  }
+
+  .form-inline {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .form-inline .form-control {
+    margin: 0 5px;
+  }
+
 </style>
 <!-- Modal -->
 <div class="modal fade" id="modalAddConteo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -22,14 +37,15 @@ select[multiple], select[size] {
       <div class="modal-body">
         <div class="containerAddUser">
           <div class="row">
-            <div class="col-xl-6">
+            <div class="col-xl-12">
               <div class="well well-sm mt-4">
-                <form class="form-horizontal" method="post" autocomplete="off" id="conteoForm">
+                <form class="form-horizontal" method="post" autocomplete="off" id="conteoForm" style="margin-left: 2rem;">
                   <fieldset>
                     <div class="form-group">
-                      <span class="col-md-1 col-md-offset-2 text-center"><i class="bi bi-check2-circle bigicon"></i></span>
-                      <div class="col-md-6">
-                        <select id="inputRubro" class="form-control form-control-sm" name="rubro" multiple>
+                    <div class="form-inline">
+                      <label>Rubro: </label>
+                      <div>
+                        <select id="inputRubro" class="form-control form-control-sm" name="rubro" style="width: 400px;" multiple>
                           <option value="" selected disabled>SELECCIONAR RUBRO</option>
                           <?php
                           foreach($todosLosRubros as $key){
@@ -39,6 +55,16 @@ select[multiple], select[size] {
                         </select>
                       </div>
                     </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="form-inline area">
+                      <label>Areas: </label>
+                        <input id="desdeArea" name="desdeArea" type="number" placeholder="Desde..." class="form-control form-control-sm small-input" required autocomplete="off">
+                        <input id="hastaArea" name="hastaArea" type="number" placeholder="Hasta..." class="form-control form-control-sm small-input" required autocomplete="off">
+                      </div>
+                    </div>
+
                     <input type="hidden" id="numsuc" name="numsuc" value="<?php echo $_SESSION['numsuc']; ?>">
                     <input type="hidden" id="dsn" name="dsn" value="<?php echo $_SESSION['dsn']; ?>">
                   </fieldset>
@@ -56,57 +82,4 @@ select[multiple], select[size] {
   </div>
 </div>
 
-<script>
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    const inputRubro = document.querySelector('#inputRubro');
-    
-    if (inputRubro) {
-        document.querySelectorAll('#inputRubro option')[0].setAttribute('disabled', 'disabled');
-
-        inputRubro.addEventListener('change', function() {
-            this.querySelectorAll('option').forEach(option => {
-                if (option.selected && option.value === "") {
-                    option.selected = false;
-                }
-            });
-        });
-    }
-});
-
-function iniciarConteo() {
-    const selectedOptions = Array.from(document.querySelectorAll('#inputRubro option:checked'));
-    const selectedValues = selectedOptions.map(option => option.value);
-    
-    if (selectedValues.length === 0) {
-        alert('Por favor, selecciona al menos un rubro.');
-        return;
-    }
-
-    console.log('Selected rubros:', selectedValues);
-
-    const formData = new FormData(document.getElementById('conteoForm'));
-    formData.append('selectedRubros', JSON.stringify(selectedValues));
-
-    // Envía los datos al backend (ajusta la URL y el método según tus necesidades)
-    fetch('controller/iniciar.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Success:', data);
-        alert('Conteo iniciado correctamente');
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Hubo un error al iniciar el conteo.');
-    });
-}
-</script>
 

@@ -16,8 +16,8 @@ if(isset($_SESSION['username'])){
 <link rel="stylesheet" href="styles/login.css">
 	<meta charset="utf-8">
 
-	<title>Login</title>
-	<link rel="shortcut icon" href="image/logo.jpg"/>
+	<title>Conteo Stock</title>
+	<link rel="shortcut icon" href="images/caja.png"/>
 	<!--[if lt IE 9]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -29,10 +29,8 @@ if(isset($_SESSION['username'])){
 
     <div class="container">
 
-        <h3 align="center">Conteo Local</h3>
-
 		<aside id="logo" align="center">
-			<img src="images/logo.jpg" style="height: 120px; width: 170px">
+			<img src="images/Logo conteo.png" style="height: 230px; width: 300px">
 		</aside>
 
         <fieldset>

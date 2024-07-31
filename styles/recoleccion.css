@@ -120,5 +120,20 @@ body {
         background-color: #007bff;
         color: white;
     } 
+
+    .fixed {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background-color: white;
+      }
+  
+      .principal--encabezado.fixed {
+        z-index: 1001;
+      }
+  
+      .thead-fixed.fixed {
+        z-index: 1002;
+      }
     
 }
