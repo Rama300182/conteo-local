@@ -88,8 +88,8 @@ if (!isset($_SESSION['username'])) {
 
           <li> <a href="javascript:;" data-toggle="collapse" data-target="#menu2"></i> <span class="bi bi-calendar-week-fill" aria-hidden="true"></span> Historial<b class="caret"></b></a>
             <ul id="menu2" class="collapse">
-              <li><a href="">Detallado por Rubro</a></li>
-              <li><a href="">Detallado por Articulo</a></li>
+              <li><a href="conteoRubrosLocal.php">Detallado por Rubro</a></li>
+              <li><a href="conteoDetalladoLocal.php">Detallado por Articulo</a></li>
             </ul>
           </li>
 
@@ -106,7 +106,7 @@ if (!isset($_SESSION['username'])) {
       <!-- Page Content -->
       <div id="main-page-content">
         <div class="container-fluid">
-          <h1 ><i class="bi bi-box-seam"></i> Conteo Stock</h1>
+          <p style="font-size:24px;"><i class="bi bi-box-seam"></i> Conteo Stock</p>
           <div class="row">
             <div class="col-lg-12">
               <div class="panel panel-default">
@@ -146,7 +146,7 @@ if (!isset($_SESSION['username'])) {
                   </div>
                 </div>
 
-                <div class="cards-row">
+                <div class="cards-row-2">
                   <form action="inventarioArea.php" method="post" style="cursor:pointer">
                     <div class="card-button">
                       <div class="panel panel-primary">

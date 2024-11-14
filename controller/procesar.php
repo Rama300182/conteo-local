@@ -1,11 +1,5 @@
 <?php
 
-/* $dsn = '1 - CENTRAL';
-$usuario = "sa";
-$clave="Axoft1988";
-$user = $_SESSION['username'];
-$ubicacion = $_SESSION['area']; */
-
 require_once '../Class/conexion.php';
 $cid = new Conexion();
 $cid_central = $cid->conectar();
@@ -19,6 +13,7 @@ if (isset($_GET['codigos'])) {
   $fechaHora = $dia . ' ' . $hora . ':000';
 /* var_dump($codigos); */
   $fechaHora = str_replace("-","",$fechaHora);
+  $numsuc = $_GET['numsuc'];
   foreach ($codigos as $codigo) {
 
     $cod = $codigo->codigo;
@@ -28,7 +23,8 @@ if (isset($_GET['codigos'])) {
     try {
       $sql = "
       SET DATEFORMAT YMD
-      INSERT INTO SOF_INVENTARIO_FINAL (FECHA, USUARIO, AREA, COD_ARTICU, CANT) VALUES ('$fechaHora', '$user', '$ubicacion', '$cod', $cant)
+      INSERT INTO SOF_INVENTARIO_FINAL_LOCAL (FECHA, USUARIO, AREA, COD_ARTICU, CANT, SUCURSAL) 
+      VALUES ('$fechaHora', '$user', '$ubicacion', '$cod', $cant,'$numsuc')
       ";
       $stmt=sqlsrv_query($cid_central, $sql);
             if( $stmt === false ) {
@@ -47,7 +43,7 @@ if(isset($_GET['area']))
   $area=$_GET['area'];
   
   try {
-    $sql="select * from SOF_INVENTARIO_FINAL where AREA ='$area' ";
+    $sql="select * from SOF_INVENTARIO_FINAL_LOCAL where AREA ='$area' ";
     $stmt = sqlsrv_query($cid_central, $sql);
 
     if ($row = sqlsrv_fetch_array($stmt)) {

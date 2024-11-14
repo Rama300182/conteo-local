@@ -9,61 +9,87 @@ if(isset($_SESSION['username'])){
 <!doctype html>
 <html lang="en-US">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<!--<link rel="stylesheet" type="text/css" href="css/css.css">-->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-<link rel="stylesheet" href="styles/login.css">
-	<meta charset="utf-8">
-
-	<title>Conteo Stock</title>
-	<link rel="shortcut icon" href="images/caja.png"/>
-	<!--[if lt IE 9]>
-		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Inventario Sucursal</title>
+    <link rel="shortcut icon" href="images/caja.png"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="styles/login.css">
 </head>
 
-
-<body>
-
+<body class="d-flex align-items-center py-4 bg-body-tertiary">
     <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="text-center mb-4">
+                    <img src="images/Logo conteo.png" alt="Logo" class="img-fluid" style="max-height: 200px;">
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <form action="validar.php" method="post">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="usuarioRegistrado" name="user" placeholder="Usuario" required autofocus>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    </div>
+                                    <input type="password" class="form-control" id="example-password-input" name="pass" placeholder="Contraseña" required>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="showPassword">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-block" type="submit">
+                                <i class="fas fa-sign-in-alt"></i> Ingresar
+                            </button>
+							<?php
+								if (isset($_SESSION['login_error'])) {
+									echo '<div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+											' . htmlspecialchars($_SESSION['login_error']) . '
+											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>';
+									unset($_SESSION['login_error']);
+								}
+							?>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-		<aside id="logo" align="center">
-			<img src="images/Logo conteo.png" style="height: 230px; width: 300px">
-		</aside>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-        <fieldset>
+	<script>
 
-            <form action="validar.php" method="post">
-
-			<div class="container login-form">
-					<h2 class="login-title">- Please Login -</h2>
-					<div class="panel panel-default">
-						<div class="panel-body">
-							<form>
-								<div class="input-group login-userinput">
-									<span class="input-group-addon"><span class="fa fa-user mr-3" id="userIcon"></span></span>
-									<input class="form-control" type="text" id="usuarioRegistrado" name="user" placeholder="Usuario" required autofocus>
-								</div>
-								<div class="input-group">
-									<span class="input-group-addon"><span class="fa fa-lock mr-3" id="userIcon"></span></span>
-									<input class="form-control" type="password" value="hunter2" id="example-password-input" placeholder="Contraseña" name="pass" required>
-									<span id="showPassword" class="input-group-btn">
-							<button class="btn btn-default reveal" type="button"><i class="glyphicon glyphicon-eye-open"></i></button>
-						</span>  
-								</div>
-								<button class="btn btn-primary btn-block login-button" type="submit"><i class="fa fa-sign-in"></i> Ingresar</button>		
-							</form>			
-						</div>
-					</div>
-				</div>
-
-            </form>
-
-        </fieldset>
-
-    </div> <!-- end login-form -->
-
+		document.getElementById('showPassword').addEventListener('click', function (e) {
+			var passwordInput = document.getElementById('example-password-input');
+			var icon = this.querySelector('i');
+			if (passwordInput.type === 'password') {
+				passwordInput.type = 'text';
+				icon.classList.remove('fa-eye');
+				icon.classList.add('fa-eye-slash');
+			} else {
+				passwordInput.type = 'password';
+				icon.classList.remove('fa-eye-slash');
+				icon.classList.add('fa-eye');
+			}
+		});
+		
+</script>
 </body>
 </html>

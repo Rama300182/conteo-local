@@ -1,75 +1,84 @@
-let area = document.getElementById("caja");
-area.focus();
-let formulario = document.getElementById("formulario");
-let btnEnviar = document.getElementById("enviar");
-let cancel = new Audio("sound/Stop Sound Effect.ogg");
-let conexion;
-let ubicacion;
-/* formulario.addEventListener("submit", buscarArea); */
-btnEnviar.addEventListener("click", buscarArea);
-area.addEventListener("search", buscarArea);
-area.addEventListener("keypress", buscarArea);
-/* area.addEventListener("keypress", buscarArea); */
+document.addEventListener('DOMContentLoaded', function() {
+  let area = document.getElementById("caja");
+  let btnEnviar = document.getElementById("enviar");
+  let numsucElement = document.getElementById("numsuc");
+  let cancel = new Audio("sound/error-170796.ogg");
 
-
-function buscarArea(e) {
-  ubicacion = area.value;
-  conexion = new XMLHttpRequest();
-  conexion.onreadystatechange = procesar;
-  conexion.open("GET", "controller/ubicacion.php?area=" + ubicacion, true);
-  conexion.send();
-}
-
-function procesar(e) {
-  if (
-    conexion.readyState == 4 &&
-    conexion.status == 200 &&
-    conexion.readyState != 3
-  ) {
-    if (conexion.responseText.includes("Error")) {
-      Swal.fire(
-        {
-          icon: "error",
-          title: "Error",
-          text: "Area no encontrada " + conexion.responseText,
-        },
-        cancel.play(),
-        e.preventDefault()
-      );
-    } else {
-      buscarAreaInventarioFinal(e, ubicacion);
-    }
+  // Verifica que el elemento numsuc existe
+  if (!numsucElement) {
+      console.error('El elemento numsuc no se encontró');
+      return; // Este return es válido porque está dentro de una función
   }
-}
 
-function buscarAreaInventarioFinal(e, ubicacion) {
-  conexion = new XMLHttpRequest();
-  conexion.onreadystatechange = BuscarUbicacion;
-  conexion.open("GET", "controller/ubicacion.php?ubicacion=" + ubicacion, true);
-  conexion.send();
-}
+  let numsuc = parseInt(numsucElement.value, 10);
 
-function BuscarUbicacion(e) {
-  console.log(conexion.responseText);
-  if (
-    conexion.readyState == 4 &&
-    conexion.status == 200 &&
-    conexion.readyState != 3
-  ) {
-    if (conexion.responseText.includes("Error")) {
-      Swal.fire(
-        {
-          icon: "error",
-          title: "Error",
-          text:
-            "Ya se realizó el inventario en esta area" +
-            conexion.responseText,
-        },
-        cancel.play(),
-        e.preventDefault()
-      );
-    } else {
-      window.location.href = "recoleccion.php?area=" + ubicacion;
-    }
+  // Verifica que numsuc sea un número válido
+  if (isNaN(numsuc)) {
+      console.error('El valor de numsuc no es un número válido');
+      return; // Este return es válido porque está dentro de una función
   }
-}
+
+  area.focus();
+  btnEnviar.addEventListener("click", buscarArea);
+  area.addEventListener("search", buscarArea);
+  area.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+          buscarArea(e);
+      }
+  });
+
+  function buscarArea(e) {
+      e.preventDefault();
+      let ubicacion = area.value;
+      fetch(`controller/ubicacion.php?area=${encodeURIComponent(ubicacion)}`)
+          .then(response => response.json())
+          .then(data => {
+              if (data.status === 'error') {
+                  Swal.fire({
+                      icon: "error",
+                      title: "Error",
+                      text: data.mensaje
+                  });
+                  cancel.play();
+              } else {
+                  buscarAreaInventarioFinal(ubicacion);
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "Hubo un problema al buscar la ubicación: " + error.message
+              });
+          });
+  }
+
+  function buscarAreaInventarioFinal(ubicacion) {
+      fetch(`controller/ubicacion.php?ubicacion=${encodeURIComponent(ubicacion)}&numsuc=${numsuc}`)
+          .then(response => response.json())
+          .then(data => {
+              console.log("Respuesta del servidor:", data); // Para depuración
+              if (data.status === 'error') {
+                  Swal.fire({
+                      icon: "error",
+                      title: "Error",
+                      text: data.mensaje
+                  });
+                  cancel.play();
+              } else if (data.status === 'success' && data.mensaje === 'ok') {
+                  window.location.href = `recoleccion.php?area=${encodeURIComponent(ubicacion)}`;
+              } else {
+                  throw new Error('Respuesta inesperada del servidor');
+              }
+          })
+          .catch(error => {
+              console.error('Error detallado:', error);
+              Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "Hubo un problema al verificar el inventario: " + error.message
+              });
+          });
+  }
+});

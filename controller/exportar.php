@@ -1,44 +1,94 @@
 <?php
-$fechaHora = date("Y") .  date("m") .  date("d") . (date("H")-5) . date("i") . date("s");
-$nombreFecha = 'inventario - '.$fechaHora.'.csv';
+require_once '../Class/conexion.php';
 
-header('Content-Type: text/csv; charset=utf-8');
-header('Content-Disposition: attachment; filename='.$nombreFecha);
+// Configuración de errores para depuración
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-$output = fopen('php://output', 'w');
+header('Content-Type: application/json');
 
-$dsn = '1 - CENTRAL';
-$usuario = "Axoft";
-$clave="Axoft";
-/* $desde = $_GET['desde'].' 00:00:00.000';
-$hasta = $_GET['hasta'].' 23:59:59.000'; */
+if (!isset($_GET['numsuc'])) {
+    echo json_encode(["status" => "error", "message" => "No se proporcionó el número de sucursal."]);
+    exit;
+}
 
+$numsuc = intval($_GET['numsuc']);
 
-$cid=odbc_connect($dsn, $usuario, $clave);
+$conexion = new Conexion();
+$cid = $conexion->conectar();
 
-$sql=
-	"
-	SET DATEFORMAT YMD
+if ($cid === false) {
+    echo json_encode(["status" => "error", "message" => "Error de conexión a la base de datos."]);
+    exit;
+}
 
-	SELECT 'FECHA;USUARIO;AREA;COD_ARTICU;CANT'
+// Verificar si es una solicitud de descarga o de verificación
+if (!isset($_GET['download'])) {
+    // Verificación de existencia de datos
+    $sql = "
+    SELECT COUNT(*) as count
+    FROM SOF_INVENTARIO_FINAL_LOCAL
+    WHERE SUCURSAL = ?
+    ";
 
-	UNION ALL
+    $params = array($numsuc);
+    $stmt = sqlsrv_query($cid, $sql, $params);
 
-	SELECT 
-	CAST( CAST(FECHA AS DATE)AS VARCHAR) COLLATE Latin1_General_BIN +';'+
-	CAST(USUARIO AS VARCHAR ) COLLATE Latin1_General_BIN+';'+
-	CAST(AREA AS VARCHAR ) COLLATE Latin1_General_BIN+';'+
-	CAST(COD_ARTICU AS VARCHAR) COLLATE Latin1_General_BIN+';'+ 
-	CAST(CANT AS VARCHAR)  COLLATE Latin1_General_BIN
-	FROM SOF_INVENTARIO_FINAL
-	
-	";
-//WHERE FECHA BETWEEN '$desde' AND '$hasta'
-ini_set('max_execution_time', 300);
-$result=odbc_exec($cid,$sql)or die(exit("Error en odbc_exec"));
+    if ($stmt === false) {
+        echo json_encode(["status" => "error", "message" => "Error al ejecutar la consulta de verificación."]);
+        exit;
+    }
 
-while($v=odbc_fetch_array($result))fputcsv($output, $v);
+    $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+    $count = $row['count'];
 
+    if ($count == 0) {
+        echo json_encode(["status" => "empty", "message" => "No hay datos para exportar en esta sucursal."]);
+    } else {
+        echo json_encode(["status" => "success", "message" => "Datos listos para exportar.", "count" => $count]);
+    }
+} else {
+    // Exportación de datos
+    $sql = "
+    SET DATEFORMAT YMD
+    SELECT 
+        CONVERT(VARCHAR, FECHA, 120) AS FECHA,
+        USUARIO,
+        AREA,
+        COD_ARTICU,
+        CAST(CANT AS VARCHAR) AS CANT,
+        CAST(SUCURSAL AS VARCHAR) AS SUCURSAL
+    FROM SOF_INVENTARIO_FINAL_LOCAL
+    WHERE SUCURSAL = ?
+    ORDER BY FECHA
+    ";
 
+    $params = array($numsuc);
+    $stmt = sqlsrv_query($cid, $sql, $params);
 
+    if ($stmt === false) {
+        echo json_encode(["status" => "error", "message" => "Error al ejecutar la consulta de exportación."]);
+        exit;
+    }
+
+    $fechaHora = date("YmdHis");
+    $nombreFecha = 'inventario_suc' . $numsuc . '_' . $fechaHora . '.csv';
+
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="' . $nombreFecha . '"');
+
+    $output = fopen('php://output', 'w');
+
+    // Escribir la cabecera
+    fputcsv($output, array('FECHA', 'USUARIO', 'AREA', 'COD_ARTICU', 'CANT', 'SUCURSAL'), ';');
+
+    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+        fputcsv($output, $row, ';');
+    }
+
+    fclose($output);
+    exit;
+}
+
+sqlsrv_close($cid);
 ?>

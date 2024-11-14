@@ -38,7 +38,6 @@ $(document).ready(function () {
     } else if ($("#bootstrap-sidebar").hasClass("text-menu")) {
       localStorage.setItem("default-padding", "150px");
       $("#wrapper").css("padding-left", "150px");
-      console.log("text");
     } else if ($("#bootstrap-sidebar").hasClass("big-icon-menu")) {
       localStorage.setItem("default-padding", "100px");
       $("#wrapper").css("padding-left", "100px");

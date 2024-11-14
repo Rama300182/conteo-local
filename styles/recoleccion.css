@@ -1,139 +1,132 @@
 body {
-    margin: 0;
     font-family: 'Roboto Condensed', sans-serif;
-    height: 600px;
+    font-size: 14px;
 }
 
-@media (min-width: 360px) {
-    .principal {
-        width: auto;
-        /* background-color: red; */
-    }
+.table thead {
+    position: sticky;
+    top: 0;
+    background-color: #007bff;
+    color: white;
+    z-index: 1;
+  }
+  
+  .table tbody {
+    display: block;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px); /* Ajusta según sea necesario */
+  }
+  
+  .table thead, .table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
 
-    .principal--encabezado {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        /*  background-color: aqua; */
+.principal {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.principal--encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.principal__elemento i {
+    font-size: 1.5rem;
+}
+
+.principal__elemento i.fa-times-circle {
+    color: #dc3545;
+}
+
+.principal__elemento i.fa-check-square {
+    color: #28a745;
+}
+
+.principal--buscar {
+    padding: 10px 15px;
+}
+
+.principal--buscar__ele input {
+    height: 2.2rem;
+    text-align: center;
+}
+
+.principal--conteo {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+    font-weight: bold;
+}
+
+.fa-trash-alt {
+    color: #dc3545;
+    font-size: 1rem;
+}
+
+.table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  .table th,
+  .table td {
+    padding: 8px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.8em;
+  }
+  
+  .col-codigo {
+    width: 25%;
+    text-align: center;
+  }
+  
+  .col-descripcion {
+    width: 37%;
+  }
+  
+  .col-cant {
+    width: 13%;
+    text-align: center;
+  }
+  
+  .col-accion {
+    width: 8%;
+    text-align: center;
+  }
+  
+  .table tbody td:nth-child(3) {
+    text-align: center;
+  }
+  
+  .table tbody td:last-child {
+    text-align: center;
+  }
+
+@media (min-width: 768px) {
+    body {
+        font-size: 16px;
     }
 
     .principal__elemento i {
-        font-size: 2.5rem;
-    }
-
-    .principal__elemento i.fa-circle-xmark {
-        color: rgb(131, 5, 5);
-    }
-
-    .principal__elemento i.fa-square-check {
-        color: rgb(5, 131, 5);
-    }
-
-    .principal--conteo {
-        display: inline-block;
-    }
-
-    .principal--buscar {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .principal--buscar__ele {
-        margin-bottom: 5px;
-        display: flex;
-        justify-content: center;
+        font-size: 2rem;
     }
 
     .principal--buscar__ele input {
-        border: 1px solid rgb(0, 0, 0);
-        border-radius: 5px;
         height: 3rem;
-        width: 70vw;
-        text-align: center;
-
-        box-sizing: border-box;
-        /*   border: 3px solid #ccc; */
-        -webkit-transition: 0.5s;
-        transition: 0.5s;
-        outline: none;
-    }
-    .principal--buscar__ele input:focus{
-        border: 3px solid rgb(64, 141, 230);
-    }
-    .principal--conteo {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
     }
 
-    .principal--conteo p {
-        display: inline-block;
-        text-align: left;
-        margin-right: 2.5rem;
-        font-weight: 900;
+    .thead-fixed {
+        top: 130px;
     }
-
-    .table {
-        border-collapse: collapse;
-        border-spacing: 0;
-        width: 100%;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        border: 1px solid rgb(255, 255, 255);
-    }
-
-    th,
-    td {
-        text-align: center;
-       /*  padding: 8px; */
-        font-size: 0.8rem;
-    }
-
-    tr:nth-child(even) {
-        background-color: #f2f2f2
-    }
-
-    .fa-trash-can
-    {
-        color: #DC3545;
-        font-size:1rem ;
-    }
-
-    /****/
-
-    /* .principal
-    {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 50px;
-        z-index: 1030;
-    } */
-
-    .thead-fixed{ 
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background-color: #007bff;
-        color: white;
-    } 
-
-    .fixed {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        background-color: white;
-      }
-  
-      .principal--encabezado.fixed {
-        z-index: 1001;
-      }
-  
-      .thead-fixed.fixed {
-        z-index: 1002;
-      }
-    
 }

@@ -1,283 +1,214 @@
 document.addEventListener("DOMContentLoaded", iniciarEscucha);
 
-/*
-if (
-  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  )
-) {
-  //si es un dispositivo movil el input buscar articulo solo podrá ser utilizado por el escaner del colector.
-  //esto es para que no aparezca el teclado de android y ocupe espacio en pantalla
-  document.getElementById("buscarArticulo").readOnly = true;
-} else {
-  document.getElementById("buscarArticulo").readOnly = false;
-}*/
+// Variables globales
+const tabla = document.querySelector(".table");
+const total = document.getElementById("total");
+const ultimoIngresado = document.getElementById("ultCodigo");
+const inputSearch = document.getElementById("buscarArticulo");
+const iconProcesar = document.getElementById("iconConfirm");
+const iconCancel = document.getElementById("iconCancel");
 
-let tabla = document.querySelector(".table");
-let total = document.getElementById("total");
-let ultimoIngresado = document.getElementById("ultCodigo");
-let trash = document.querySelectorAll(".fa-trash-can");
+// Declaración e inicialización de los sonidos
+let success, cancel;
 
-let success = new Audio("sound/Confirm Button - Sound Effect (HD).ogg");
-let cancel = new Audio("sound/Stop Sound Effect.ogg");
+// Carga los sonidos solo si el navegador soporta la API de Audio
+if (typeof Audio !== 'undefined') {
+  success = new Audio("sound/Confirm Button - Sound Effect (HD).ogg");
+  cancel = new Audio("sound/Stop Sound Effect.ogg");
+}
 
-let inputSearch = document.getElementById("buscarArticulo");
-
-let iconProcesar = document.querySelector(".fa-square-check");
-let iconCancel = document.querySelector(".fa-circle-xmark");
-
+// Funciones
 function iniciarEscucha() {
-  inputSearch.addEventListener("search", () => {
-    console.log("estas buscando");
-  });
   inputSearch.addEventListener("keypress", buscarCodigo);
   iconProcesar.addEventListener("click", confirmar);
   iconCancel.addEventListener("click", cancelar);
 }
 
-function buscarCodigo(e) {
-  let articulo = e.target.value;
-  conexion = new XMLHttpRequest();
-  conexion.onreadystatechange = () => {
-    if (conexion.readyState == 4 && conexion.status == 200) {
-      if (!conexion.responseText.includes("error")) {
-        resultado = conexion.responseText;
-        console.log(resultado);
-        agregarFila(articulo, resultado); //agrego elemento a la fila
-      } else {
-        Swal.fire("Código inexistente", "", "error");
-        cancel.play();
+
+async function buscarCodigo(e) {
+  if (e.key === 'Enter' || e.keyCode === 13) {
+    const articulo = e.target.value;
+    try {
+      const response = await fetch(`controller/articulos.php?codigo=${articulo}`);
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
       }
-      inputSearch.value = "";
+      
+      console.log(data);
+      agregarFila(data.cod_articu, data.descripcio);
+    } catch (error) {
+      console.error("Error al procesar la respuesta:", error);
+      Swal.fire("Código inexistente", "", "error");
+      cancel.play();
     }
-  };
-  conexion.open("GET", "controller/articulos.php?codigo=" + articulo, false);
-  conexion.send();
+    
+    inputSearch.value = "";
+  }
 }
 
+//Agrega fila al escanear//
 function agregarFila(articulo, descripcion) {
-  total.innerHTML = parseInt(total.innerHTML) + 1;
-  //buscar articulo, si está , se suma, caso contrario se agrega a la tabla
-  codigo = articulo.split("  ").join("");
-  //codigos que tienen 2 espacios no genera id correctamente.
-  if (!buscarCodigoEnTabla(codigo)) {
-    let rows = $("tbody");
-    /*  codigo=articulo.split("  ").join("");  */
-    rows.append(`
-    <tr>
-        <td>${articulo}</td>
-        <td id=${codigo}>${descripcion}</td>
-        <td>1</td>
-        <td><i class="fa-solid fa-trash-can"></i></td>
-    </tr>
-`);
+  total.textContent = parseInt(total.textContent) + 1;
+  
+  const codigo = articulo.split("  ").join("");
+  
+  if (!document.getElementById(codigo)) {
+    const tbody = document.querySelector("table tbody");
+    const newRow = tbody.insertRow(-1);
+    newRow.innerHTML = `
+      <td class="col-codigo">${articulo}</td>
+      <td class="col-descripcion" id="${codigo}">${descripcion}</td>
+      <td class="col-cant">1</td>
+      <td class="col-accion"><i class="fas fa-trash-alt"></i></td>
+    `;
+    newRow.querySelector('.fas.fa-trash-alt').addEventListener('click', confirmarBorrado);
   } else {
-    let cod = document.getElementById(`${codigo}`);
-    cod.parentElement.children[2].innerHTML =
-      parseInt(cod.parentElement.children[2].innerHTML) + 1; //sumo en 1 cantidad
+    const cantidadCell = document.getElementById(codigo).nextElementSibling;
+    cantidadCell.textContent = parseInt(cantidadCell.textContent) + 1;
   }
-  ultimoIngresado.innerHTML = codigo;
-  trash = document.querySelectorAll(".fa-trash-can");
+  
+  ultimoIngresado.textContent = codigo;
 }
 
-function buscarCodigoEnTabla(articulo) {
-  let codigo = document.getElementById(`${articulo}`);
-  let resultado;
-  if (codigo != null) {
-    resultado = true;
-  } else {
-    resultado = false;
-  }
 
-  return resultado;
-}
-
-//funciones check y cancel
-function confirmar() {
-  const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: "btn btn-success ml-2",
-      cancelButton: "btn btn-danger",
-    },
-    buttonsStyling: false,
+function confirmarBorrado(event) {
+  Swal.fire({
+    title: "¿Desea borrar artículo?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Confirmar",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const fila = event.target.closest('tr');
+      const cantidad = parseInt(fila.cells[2].textContent);
+      total.textContent = parseInt(total.textContent) - cantidad;
+      fila.remove();
+    }
   });
-  swalWithBootstrapButtons
-    .fire({
-      title: "Confirmar?",
-      text: "Ya no se podran agregar articulos!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Guardar",
-      cancelButtonText: "Cancelar",
-      reverseButtons: true,
-    })
-    .then((result) => {
-      if (result.isConfirmed) {
-        /*  if (guardarConteo()) {
-          swalWithBootstrapButtons.fire(
-            "Cambios guardados",
-            "Un nuevo conteo a sido guardado",
-            "success"
-          );
-          success.play();
-        } else  */ /* {
-          swalWithBootstrapButtons.fire(
-            "Cancelled",
-            "Your imaginary file is safe :)",
-            "error"
-          ); */
-
-        /*  cancel.play(); */
-        /*  } */
-        guardarConteo();
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire("Cancelado", "", "error");
-
-        /* cancel.play(); */
-      }
-    });
 }
 
-///GUARDAR TABLA EN OBJETO PARA GUARDAR INFO
+function confirmar() {
+  Swal.fire({
+    title: "¿Confirmar?",
+    text: "Ya no se podrán agregar artículos!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Guardar",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      guardarConteo();
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire("Operación cancelada", "No se realizaron cambios", "info");
+    }
+  });
+}
 
 function guardarConteo() {
-  let conteoArticulos = [];
-  let usuario = document.getElementById("usuario").value;
-  let ubicacion = document.getElementById("ubicacion").value;
-  let table = document.querySelector(".table");
-  let rows = table.rows;
-  let c = 1;
-  while (c < rows.length) {
-    let codigo = rows[c].children[0].innerHTML;
-    let cantidad = rows[c].children[2].innerHTML;
+  const conteoArticulos = [];
+  const usuario = document.getElementById("usuario").value;
+  const ubicacion = document.getElementById("ubicacion").value;
+  const numsuc = document.getElementById("numsuc").value;
+  const rows = document.querySelectorAll("tbody tr");
+  
+  rows.forEach(row => {
     conteoArticulos.push({
-      codigo: `${codigo}`,
-      cantidad: `${cantidad}`,
-      usuario: `${usuario}`,
-      ubicacion: `${ubicacion}`,
+      codigo: row.cells[0].textContent,
+      cantidad: row.cells[2].textContent,
+      usuario,
+      ubicacion,
+      numsuc,
     });
-    c++;
-  }
+  });
 
   if (conteoArticulos.length > 0) {
     guardarInformacion(conteoArticulos);
   } else {
     Swal.fire({
       icon: "info",
-      title: "Campos vacios",
+      title: "Campos vacíos",
       text: "Deben comenzar el conteo",
     });
   }
-
-  /*  return false; */ //me tiene que retornar true o false si se ejecutó la query en el back
 }
 
-function guardarInformacion(conteoArticulos) {
-  conexion = new XMLHttpRequest();
-  conexion.onreadystatechange = procesar;
-  let codigos = JSON.stringify(conteoArticulos);
-  conexion.open("GET", "./controller/procesar.php?codigos=" + codigos, false);
-  conexion.send();
-}
-
-function procesar() {
-  if (conexion.readyState == 4 && conexion.status == 200) {
-    if (conexion.responseText.includes("Error")) {
-      Swal.fire(
-        {
-          icon: "error",
-          title: "Error de carga",
-          text: "No se modificó ningún pedido! " + conexion.responseText,
-        },
-        cancel.play()
-      );
-    } else {
-      Swal.fire(
-        {
-          icon: "success",
-          title: "Datos agregados exitosamente!",
-          text: "" + conexion.responseText,
-          showConfirmButton: true,
-        },
-        success.play()
-      ).then(function () {
-        /* location.reload(); */
-        window.location.href = "index.php";
-      });
+async function guardarInformacion(conteoArticulos) {
+  const codigos = JSON.stringify(conteoArticulos);
+  const numsuc = document.getElementById("numsuc").value;
+  
+  try {
+    const response = await fetch(`./controller/procesar.php?codigos=${codigos}&numsuc=${numsuc}`);
+    const data = await response.text();
+    
+    if (data.toLowerCase().includes("error")) {
+      throw new Error(data);
+    }
+    
+    await Swal.fire({
+      icon: "success",
+      title: "Datos agregados exitosamente!",
+      text: data,
+      showConfirmButton: false,
+      timer: 1500
+    });
+    
+    // Si tienes un sonido de éxito, asegúrate de que esté definido
+    if (typeof success !== 'undefined' && success instanceof Audio) {
+      success.play();
+    }
+    
+    // Redirigir después de un breve retraso para asegurar que el usuario vea el mensaje
+    setTimeout(() => {
+      window.location.href = "index.php";
+    }, 1500);
+  } catch (error) {
+    console.error("Error al guardar información:", error);
+    await Swal.fire({
+      icon: "error",
+      title: "Error de carga",
+      text: "Hubo un problema al procesar la solicitud: " + error.message,
+    });
+    
+    // Si tienes un sonido de error, asegúrate de que esté definido
+    if (typeof cancel !== 'undefined' && cancel instanceof Audio) {
+      cancel.play();
     }
   }
 }
 
 function cancelar() {
-  const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: "btn btn-success ml-2",
-      cancelButton: "btn btn-danger",
-    },
-    buttonsStyling: false,
+  console.log("Función cancelar ejecutada"); // Para depuración
+  Swal.fire({
+    title: "¿Desea salir?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Aceptar",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "index.php";
+    }
   });
-  swalWithBootstrapButtons
-    .fire({
-      title: "Desea salir?",
-      text: "Se perdera la información de los artículos escaneados",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Aceptar",
-      cancelButtonText: "Cancelar",
-      reverseButtons: true,
-    })
-    .then((result) => {
-      if (result.isConfirmed) {
-        window.location.href = "index.php";
-      }
-    });
 }
 
-const observer = new MutationObserver((mutationList) => {
-  mutationList.forEach((mutation) => {
-    if (mutation.addedNodes.length) {
-      /*  console.log("Añadido", mutation.addedNodes[0]); */
-      trash = document.querySelectorAll(".fa-trash-can");
-      trash.forEach((ele) => {
-        ele.addEventListener("click", () => {
-          const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-              confirmButton: "btn btn-success ml-2",
-              cancelButton: "btn btn-danger",
-            },
-            buttonsStyling: false,
-          });
-          swalWithBootstrapButtons
-            .fire({
-              title: "Desea borrar articulo?",
-              text: "",
-              icon: "question",
-              showCancelButton: true,
-              confirmButtonText: "Confirmar",
-              cancelButtonText: "Cancelar",
-              reverseButtons: true,
-            })
-            .then((result) => {
-              if (result.isConfirmed) {
-                total.innerHTML=parseInt(total.innerHTML)-(ele.parentElement.parentElement.children[2].innerHTML);
-                ele.parentElement.parentElement.remove();
-              }
-            });
-          /*  console.log("helloww:"+ele.parentElement.parentElement.remove()); */
-        });
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.type === 'childList') {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          const trashIcon = node.querySelector('.fas.fa-trash-alt');
+          if (trashIcon) {
+            trashIcon.addEventListener('click', confirmarBorrado);
+          }
+        }
       });
     }
   });
 });
 
-const table = document.querySelector("table.tr");
-const observerOptions = {
-  attributes: true,
-  childList: true,
-  subtree: true,
-};
-
-observer.observe(tabla, observerOptions);
+observer.observe(tabla, { childList: true, subtree: true });

@@ -29,14 +29,7 @@ h1
 .cards-row
 {
   display: inline-flex;
-}
-
-.card-button
-{
-  width: 490px;
-  height: 150px;
-  margin-left: 15px;
-  margin-top: 10px;
+  margin-top: -2rem;
 }
 
 body{overflow-x:hidden;overflow-y:hidden;padding-top:45px}
@@ -46,7 +39,7 @@ body{overflow-x:hidden;overflow-y:hidden;padding-top:45px}
 #wrapper.toggled{padding-left:50px}
 #bootstrap-sidebar{z-index:1000;position:fixed;left:50px;width:0;height:100%;margin-left:-50px;overflow-y:auto;-webkit-transition:all .5s ease;-moz-transition:all .5s ease;-o-transition:all .5s ease;transition:all .5s ease}
 #wrapper.toggled #bootstrap-sidebar{width:20%}
-#main-page-content{width:100%;position:absolute;padding:15px}
+#main-page-content{width:100%;position:absolute;padding:10px}
 #wrapper.toggled #main-page-content{position:absolute;margin-right:-50px}
 .sidebar-nav{position:absolute;top:10px;min-width:200px;margin:0;padding:0;list-style:none}
 .sidebar-nav li{text-indent:10px;line-height:10px;margin-bottom:10px;padding-bottom:5px}
@@ -60,13 +53,38 @@ ul.collapse{padding-top:5px}
 ul.collapse li,ul.collapsing li,ul.in li{list-style:none;border:none;padding-top:5px}
 
 @media(min-width:768px){
+
+    #feature-content
+    {
+      height: 28rem;
+    }
+    
+    .card-button
+    {
+      width: 45vh;
+      height: 1rem;
+      margin-left: 15px;
+      margin-top: 1rem;
+    }
+
+    .cards-row-2
+    {
+      display: inline-flex;
+      margin-top: 12rem;
+    }
+
+    .panel-body
+    {
+      padding: 6px;
+    }
+    
     #wrapper{padding-left:4%;padding-left:6%;padding-left:10%;position:relative}
     #wrapper.toggled{padding-left:0}
     #bootstrap-sidebar.big-icon-menu{width:100px}
     #bootstrap-sidebar.icon-menu{width:60px}
     #bootstrap-sidebar.text-menu{width:190px;font-size:100%;padding:5px}
     #wrapper.toggled #bootstrap-sidebar{width:0}
-    #main-page-content{padding:50px;position:relative}
+    #main-page-content{padding-left:50px;position:relative}
     #wrapper.toggled #main-page-content{position:relative;margin-right:0}}
     .big-icon-menu{font-size:45px}
     .big-icon-menu ul.sidebar-nav li a span.menu-text,.icon-menu ul.sidebar-nav li a span.menu-text{display:none}
