@@ -5,6 +5,7 @@ require_once 'Class/inventario.php';
 $rubro = new inventario();
 $todosLosRubros = $rubro->traerRubros();
 
+
 ?>
 
 
@@ -63,7 +64,7 @@ $todosLosRubros = $rubro->traerRubros();
                                   <?php
                                       foreach($todosLosRubros as $rubro => $key){
                                   ?>
-                              <option value="<?= $key['RUBRO'] ?>"><?= $key['RUBRO'] ?></option>
+                                    <option value="<?= $key['IDFOLDER'] ?>"><?= $key['RUBRO'] ?></option>
                                   <?php
                                   }
                                   ?>
@@ -108,6 +109,17 @@ $todosLosRubros = $rubro->traerRubros();
     });
 
   function iniciarConteo() {
+    let rubros = $('#inputRubro').val();
+    let nroSucursal = $('#nroSucursal').text();
+    let user = $('#user').text();
+    rubros.forEach(element => {
+      if(element == ''){
+        rubros.splice(rubros.indexOf(element), 1);
+      }
+    });
+
+    let rubrosString =  rubros.join(', ');
+
   Swal.fire({
     title: "Desea confirmar los datos?",
     text: "El conteo quedará iniciado!",
@@ -126,12 +138,14 @@ $todosLosRubros = $rubro->traerRubros();
         url: "controller/iniciar.php",
         method: "POST",
         data: {
-          rubro: rubro,
+          rubro: rubrosString,
+          nroSucursal: nroSucursal,
+          user: user
         },
         success: function (response) {
-          let datos = JSON.parse(response);
-          console.log(response); // Agrega esta línea para depuración
-          if (datos.status === 'success') {
+      
+   
+          if (response.trim() === 'Conteo iniciado') {
             Swal.fire({
               title: "Éxito",
               text: "El conteo ha sido iniciado.",

@@ -11,6 +11,8 @@ if (!isset($_SESSION['username'])) {
   $rubro = new inventario();
   $todosLosRubros = $rubro->traerRubros();
 
+  $user = $_SESSION['username'];
+  $nroSucursal = $_SESSION['numsuc'];
 
 ?>
 
@@ -54,6 +56,9 @@ if (!isset($_SESSION['username'])) {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
+            <span id="user" hidden><?= $user ?></span>
+            <span id="nroSucursal" hidden><?= $nroSucursal ?></span>
+
           </button>
           <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"> <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span><span class="logo"> Conteo Stock</span> 
           </a>

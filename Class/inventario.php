@@ -9,7 +9,7 @@ class Inventario
         require_once 'Conexion.php';
 
         $cid = new Conexion();
-        $cid_central = $cid->conectar();
+        $cid_central = $cid->conectar('central');
         $sql = $sqlEnviado;
 
         $stmt = sqlsrv_query($cid_central, $sql);
