@@ -112,6 +112,30 @@ $todosLosRubros = $rubro->traerRubros();
     let rubros = $('#inputRubro').val();
     let nroSucursal = $('#nroSucursal').text();
     let user = $('#user').text();
+    let desdeArea = $('#desdeArea').val(); 
+    let hastaArea = $('#hastaArea').val();
+
+
+    if(desdeArea == '' || hastaArea == '') {
+      Swal.fire({
+        title: "Error",
+        text: "Debe ingresar un rango de áreas.",
+        icon: "error"
+      });
+      return;
+    }
+
+    if(desdeArea > hastaArea){
+      Swal.fire({
+        title: "Error",
+        text: "El área de inicio no puede ser mayor al área final.",
+        icon: "error"
+      });
+      return;
+    }
+
+    let areas = desdeArea + '-' + hastaArea;
+
     rubros.forEach(element => {
       if(element == ''){
         rubros.splice(rubros.indexOf(element), 1);
@@ -119,6 +143,15 @@ $todosLosRubros = $rubro->traerRubros();
     });
 
     let rubrosString =  rubros.join(', ');
+    
+    if(rubrosString == ''){
+      Swal.fire({
+        title: "Error",
+        text: "Debe seleccionar al menos un rubro.",
+        icon: "error"
+      });
+      return;
+    }
 
   Swal.fire({
     title: "Desea confirmar los datos?",
@@ -140,19 +173,22 @@ $todosLosRubros = $rubro->traerRubros();
         data: {
           rubro: rubrosString,
           nroSucursal: nroSucursal,
-          user: user
+          user: user,
+          areas:areas
         },
         success: function (response) {
       
    
-          if (response.trim() === 'Conteo iniciado') {
+          if (response != false) {
             Swal.fire({
               title: "Éxito",
               text: "El conteo ha sido iniciado.",
               icon: "success"
             }).then(() => {
               $('#modalAddConteo').modal('hide');
+              window.location.href = 'index.php?idEnc='+ response.trim();
             });
+   
           } else {
             Swal.fire({
               title: "Error",

@@ -30,7 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function buscarArea(e) {
       e.preventDefault();
       let ubicacion = area.value;
-      fetch(`controller/ubicacion.php?area=${encodeURIComponent(ubicacion)}`)
+      let idEnc = document.querySelector("#idEnc").textContent
+      fetch(`controller/ubicacion.php?area=${encodeURIComponent(ubicacion)}&idEnc=${idEnc}`)
           .then(response => response.json())
           .then(data => {
               if (data.status === 'error') {
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   });
                   cancel.play();
               } else {
-                  buscarAreaInventarioFinal(ubicacion);
+                  buscarAreaInventarioFinal(ubicacion, idEnc);
               }
           })
           .catch(error => {
@@ -54,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
           });
   }
 
-  function buscarAreaInventarioFinal(ubicacion) {
+  function buscarAreaInventarioFinal(ubicacion, idEnc) {
       fetch(`controller/ubicacion.php?ubicacion=${encodeURIComponent(ubicacion)}&numsuc=${numsuc}`)
           .then(response => response.json())
           .then(data => {
@@ -67,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   });
                   cancel.play();
               } else if (data.status === 'success' && data.mensaje === 'ok') {
-                  window.location.href = `recoleccion.php?area=${encodeURIComponent(ubicacion)}`;
+                  window.location.href = `recoleccion.php?area=${encodeURIComponent(ubicacion)}&idEnc=${idEnc}`;
               } else {
                   throw new Error('Respuesta inesperada del servidor');
               }

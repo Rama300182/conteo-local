@@ -1,8 +1,11 @@
 <?php
 include '../Class/conexion.php';
 
-$cid = new Conexion();
-$cid = $cid->conectar();
+$conexion = new Conexion();
+$cid = $conexion->conectar('central');
+
+$cid2 = $conexion->conectar('localhost');
+
 
 header('Content-Type: application/json');
 
@@ -13,6 +16,43 @@ function responder($status, $mensaje) {
 
 if (isset($_GET['area'])) {
     $area = $_GET['area'];
+    $idEnc = $_GET['idEnc'];
+
+    try {
+        $sql = "SELECT TOP 1 * FROM UBICACION WHERE Cod_Ubicacion = ?";
+        $params = array($area);
+        $stmt = sqlsrv_query($cid, $sql, $params);
+
+        if ($stmt === false) {
+            throw new Exception(print_r(sqlsrv_errors(), true));
+        }
+
+        $sql2 = "SELECT 1
+        FROM RO_ENC_CONTEO_LOCAL
+        WHERE id = ? 
+        AND ? >= CAST(SUBSTRING(AREA, 1, CHARINDEX('-', AREA) - 1) AS INT)
+        AND ? <= CAST(SUBSTRING(AREA, CHARINDEX('-', AREA) + 1, LEN(AREA)) AS INT)";
+
+        $params2 = array($idEnc, $area, $area);
+
+        $stmt2 = sqlsrv_query($cid2, $sql2, $params2);
+
+        if (sqlsrv_has_rows($stmt2)) {
+            // responder('success', 'El área está disponible.');
+        } else {
+            responder('error', 'Área no disponible para el encabezado.');
+            die();
+        }
+
+        if ($row = sqlsrv_fetch_array($stmt)) {
+            responder('success', $row['Cod_Ubicacion']);
+        } else {
+            responder('error', 'Ubicación no encontrada');
+        }
+    } catch (\Throwable $th) {
+        //throw $th;
+    }
+
 
     try {
         $sql = "SELECT TOP 1 * FROM UBICACION WHERE Cod_Ubicacion = ?";

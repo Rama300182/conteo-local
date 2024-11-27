@@ -24,6 +24,7 @@
 <body class="bg-light">
 
 <input type="hidden" id="numsuc" name="numsuc" value="<?php echo $_SESSION['numsuc']; ?>">
+<div hidden id="idEnc"><?= $_GET['idEnc'] ?></div>
 
     <div class="container py-2">
         <div class="row justify-content-center">

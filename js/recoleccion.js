@@ -122,11 +122,12 @@ function guardarConteo() {
       usuario,
       ubicacion,
       numsuc,
+      descripcion: row.cells[1].textContent
     });
   });
 
   if (conteoArticulos.length > 0) {
-    guardarInformacion(conteoArticulos);
+    guardarDetalle(conteoArticulos);
   } else {
     Swal.fire({
       icon: "info",
@@ -134,6 +135,36 @@ function guardarConteo() {
       text: "Deben comenzar el conteo",
     });
   }
+}
+
+async function guardarDetalle (conteoArticulos) {
+
+  const codigos = JSON.stringify(conteoArticulos);
+  const numSuc = document.getElementById("numsuc").value;
+  const area  = document.querySelector("#ubicacion").value;
+  const idEnc = document.querySelector("#idEnc").value;
+  const usuario = document.querySelector("#usuario").value
+
+
+
+  $.ajax({
+    url: "controller/guardarDetalle.php",
+    method: "POST",
+    data: {
+      codigos: codigos,
+      numSuc: numSuc,
+      area: area,
+      idEnc: idEnc,
+      usuario: usuario
+    },
+    success: function (response) {
+      if(response){
+        guardarInformacion(conteoArticulos)
+ 
+      }
+    } 
+  })
+
 }
 
 async function guardarInformacion(conteoArticulos) {
