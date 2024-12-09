@@ -5,9 +5,13 @@ if (!isset($_SESSION['username'])) {
   header("Location:login.php");
 } else {
 /*   $ubicacion = $_SESSION['area']; */
+  require_once 'Class/conteo.php';
   $usuario = $_SESSION['username'];
   $ubicacion=$_GET['area'];
   $idEnc = $_GET['idEnc'];
+  $conteo = new Conteo();
+  $conteo->estadoIniciado($idEnc);  
+  
 ?>
   <!DOCTYPE html>
 <html lang="en">

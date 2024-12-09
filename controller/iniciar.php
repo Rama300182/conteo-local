@@ -13,5 +13,8 @@ $result = $conteo->iniciarConteo($rubro, $nroSucursal, $user, $areas);
 $conteo->fotoStock($rubro, $nroSucursal);
 $conteo->cargarArticulosPorRubroTemp($rubro, $nroSucursal);
 
+
+$_SESSION['nroConteo'] = $result;
+
 echo $result;
 ?>

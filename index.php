@@ -32,7 +32,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         
-                        <a class="btn btn-primary mb-4" id="btnBack" href="login.php">
+                        <a class="btn btn-primary mb-4" id="btnBack" href="menu.php">
                             <i class="fas fa-undo"></i> Atrás
                         </a>
                         

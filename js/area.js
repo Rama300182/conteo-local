@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
       fetch(`controller/ubicacion.php?area=${encodeURIComponent(ubicacion)}&idEnc=${idEnc}`)
           .then(response => response.json())
           .then(data => {
+           
               if (data.status === 'error') {
                   Swal.fire({
                       icon: "error",
@@ -42,7 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
                   });
                   cancel.play();
               } else {
-                  buscarAreaInventarioFinal(ubicacion, idEnc);
+                window.location.href = `recoleccion.php?area=${encodeURIComponent(ubicacion)}&idEnc=${idEnc}`;
+                 
               }
           })
           .catch(error => {
@@ -55,31 +57,4 @@ document.addEventListener('DOMContentLoaded', function() {
           });
   }
 
-  function buscarAreaInventarioFinal(ubicacion, idEnc) {
-      fetch(`controller/ubicacion.php?ubicacion=${encodeURIComponent(ubicacion)}&numsuc=${numsuc}`)
-          .then(response => response.json())
-          .then(data => {
-              console.log("Respuesta del servidor:", data); // Para depuración
-              if (data.status === 'error') {
-                  Swal.fire({
-                      icon: "error",
-                      title: "Error",
-                      text: data.mensaje
-                  });
-                  cancel.play();
-              } else if (data.status === 'success' && data.mensaje === 'ok') {
-                  window.location.href = `recoleccion.php?area=${encodeURIComponent(ubicacion)}&idEnc=${idEnc}`;
-              } else {
-                  throw new Error('Respuesta inesperada del servidor');
-              }
-          })
-          .catch(error => {
-              console.error('Error detallado:', error);
-              Swal.fire({
-                  icon: "error",
-                  title: "Error",
-                  text: "Hubo un problema al verificar el inventario: " + error.message
-              });
-          });
-  }
 });

@@ -15,7 +15,7 @@ $codigosParaSql = '';
 
 foreach ($codigos as $codigo) {
 
-    $codigosParaSql .= "('$idEnc','$usuario','$area','$codigo->codigo','$codigo->descripcion','$codigo->cantidad', getdate(), '$numSuc'),";
+    $codigosParaSql .= "('$idEnc','$usuario','$area','$codigo->codigo','$codigo->descripcion','$codigo->cantidad', GETDATE(), '$numSuc'),";
 
 }
 $codigosParaSql = substr($codigosParaSql, 0, -1);

@@ -125,7 +125,7 @@ $todosLosRubros = $rubro->traerRubros();
       return;
     }
 
-    if(desdeArea > hastaArea){
+    if(parseInt(desdeArea) > parseInt(hastaArea)){
       Swal.fire({
         title: "Error",
         text: "El área de inicio no puede ser mayor al área final.",
