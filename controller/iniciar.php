@@ -8,6 +8,12 @@ $user = $_POST['user'];
 $areas = $_POST['areas'];
 
 $conteo = new Conteo();
+$checkConteoIniciado = $conteo->checkConteoIniciado($nroSucursal);
+
+if($checkConteoIniciado){
+    echo false;
+    die();
+}
 
 $result = $conteo->iniciarConteo($rubro, $nroSucursal, $user, $areas);
 $conteo->fotoStock($rubro, $nroSucursal);

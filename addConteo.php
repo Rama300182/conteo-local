@@ -178,8 +178,7 @@ $todosLosRubros = $rubro->traerRubros();
         },
         success: function (response) {
       
-   
-          if (response != false) {
+          if (response.trim() != false) {
             Swal.fire({
               title: "Éxito",
               text: "El conteo ha sido iniciado.",
@@ -192,7 +191,7 @@ $todosLosRubros = $rubro->traerRubros();
           } else {
             Swal.fire({
               title: "Error",
-              text: datos.message || "Hubo un problema al iniciar el conteo.",
+              text: "Ya existe un conteo iniciado para la sucursal",
               icon: "error"
             });
           }

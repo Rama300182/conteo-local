@@ -58,6 +58,28 @@ class Conteo
             return 'Error al iniciar conteo';
         }
     }
+
+    public function checkConteoIniciado ($nroSuc)
+    {
+        require_once 'Conexion.php';
+    
+        $cid = new Conexion();
+        $cid_central = $cid->conectar('localhost');
+
+        $sql = "SELECT ID FROM RO_ENC_CONTEO_LOCAL WHERE NRO_SUCURS = $nroSuc AND ESTADO != 4 AND ESTADO != 5";
+
+        $stmt = sqlsrv_query($cid_central, $sql);
+
+        $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+
+
+        if ($row) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
     
     public function fotoStock($rubro, $nroSucursal){
 

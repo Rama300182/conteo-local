@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
       fetch(`controller/ubicacion.php?area=${encodeURIComponent(ubicacion)}&idEnc=${idEnc}`)
           .then(response => response.json())
           .then(data => {
-           
               if (data.status === 'error') {
                   Swal.fire({
                       icon: "error",
@@ -47,14 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
                  
               }
           })
-          .catch(error => {
-              console.error('Error:', error);
-              Swal.fire({
-                  icon: "error",
-                  title: "Error",
-                  text: "Hubo un problema al buscar la ubicación: " + error.message
-              });
-          });
   }
 
 });
