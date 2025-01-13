@@ -5,8 +5,13 @@ if (!isset($_SESSION['username'])) {
   header("Location:login.php");
 } else {
 /*   $ubicacion = $_SESSION['area']; */
+  require_once 'Class/conteo.php';
   $usuario = $_SESSION['username'];
   $ubicacion=$_GET['area'];
+  $idEnc = $_GET['idEnc'];
+  $conteo = new Conteo();
+  $conteo->estadoIniciado($idEnc);  
+  
 ?>
   <!DOCTYPE html>
 <html lang="en">
@@ -23,6 +28,7 @@ if (!isset($_SESSION['username'])) {
 <body>
     <input type="hidden" id="usuario" value="<?= $usuario ?>">
     <input type="hidden" id="ubicacion" value="<?= $ubicacion ?>">
+    <input type="hidden" id="idEnc" value="<?= $idEnc ?>">
     <input type="hidden" id="numsuc" name="numsuc" value="<?php echo $_SESSION['numsuc']; ?>">
     
     <div class="container-fluid px-0">
@@ -66,7 +72,7 @@ if (!isset($_SESSION['username'])) {
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/recoleccion.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -2,7 +2,7 @@
 
 require_once '../Class/conexion.php';
 $cid = new Conexion();
-$cid_central = $cid->conectar();
+$cid_central = $cid->conectar('central');
 
 if (isset($_GET['codigos'])) {
 
@@ -28,7 +28,7 @@ if (isset($_GET['codigos'])) {
       ";
       $stmt=sqlsrv_query($cid_central, $sql);
             if( $stmt === false ) {
-                die( print_r( 'Error'+sqlsrv_errors() , true));
+                die( print_r( sqlsrv_errors() , true));
            }
     } catch (Exception $e) {
       echo 'Se produjo un Error:' . $e->getMessage();

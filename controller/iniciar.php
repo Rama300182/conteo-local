@@ -5,30 +5,22 @@ require_once '../Class/conteo.php';
 $rubro = $_POST['rubro'];
 $nroSucursal = $_POST['nroSucursal'];
 $user = $_POST['user'];
+$areas = $_POST['areas'];
 
 $conteo = new Conteo();
+$checkConteoIniciado = $conteo->checkConteoIniciado($nroSucursal);
 
-// $result = $conteo->iniciarConteo($rubro, $nroSucursal, $user);
+if($checkConteoIniciado){
+    echo false;
+    die();
+}
 
-// foto 
-$result = $conteo->fotoStock($rubro, $user);
+$result = $conteo->iniciarConteo($rubro, $nroSucursal, $user, $areas);
+$conteo->fotoStock($rubro, $nroSucursal);
+$conteo->cargarArticulosPorRubroTemp($rubro, $nroSucursal);
 
 
-// require_once '../Class/conexion.php';
+$_SESSION['nroConteo'] = $result;
 
-// $rubro = $_POST['rubro'];
-
-
-//   require_once '../Class/conexion.php';
-
-//     $cid = new Conexion();
-//     $cid_central = $cid->conectar('central');        
-
-//     $sql = "SELECT * FROM RO_RUBROS_TANGO_ACTIVOS WHERE RUBRO LIKE '$rubro'
-//     ";
-
-//     $stmt = sqlsrv_query( $cid_central, $sql );
-
-// echo $rubro;
-
+echo $result;
 ?>

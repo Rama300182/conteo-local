@@ -13,6 +13,7 @@ if (!isset($_SESSION['username'])) {
 
   $user = $_SESSION['username'];
   $nroSucursal = $_SESSION['numsuc'];
+  $nroConteo = (isset($_SESSION['nroConteo']) && $_SESSION['nroConteo'] != '' ) ? $_SESSION['nroConteo'] : '';
 
 ?>
 
@@ -58,6 +59,7 @@ if (!isset($_SESSION['username'])) {
             <span class="icon-bar"></span>
             <span id="user" hidden><?= $user ?></span>
             <span id="nroSucursal" hidden><?= $nroSucursal ?></span>
+            <span id="nroConteo" hidden><?= $nroConteo ?></span>
 
           </button>
           <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"> <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span><span class="logo"> Conteo Stock</span> 
@@ -118,8 +120,8 @@ if (!isset($_SESSION['username'])) {
                 <div class="panel-heading">Administrar Conteo</div>
                 <div class="panel-body" id="feature-content">
 
-                <div class="cards-row">
-                  <form type="button" data-toggle="modal" data-target="#modalAddConteo" style="cursor:pointer">
+                <div style="cursor:pointer;display: inline-flex;height:100px">
+                  <form type="button" data-toggle="modal" data-target="#modalAddConteo" >
                     <div class="card-button">
                       <div class="panel panel-primary">
                         <div class="panel-body text-center btn-info">
@@ -130,25 +132,28 @@ if (!isset($_SESSION['username'])) {
                     </div>
                   </form>
 
-                  <form style="cursor:pointer">
+                  <div style="cursor:pointer;" onClick="finalizarConteo()">
                     <div class="card-button">
                       <div class="panel panel-primary">
                         <div class="panel-body text-center btn-primary btn_inventario">
                           <span class="bi bi-send-check-fill icon-big" aria-hidden="true"></span>
-                          <h3><button type="submit" style="border:none;color:white;background:none">Finalizar Conteo</button></h3>
+                          <h3><button type="button" style="border:none;color:white;background:none">Finalizar Conteo</button></h3>
                         </div>
                       </div>
                     </div>
-                  </form>
+                  </div>
 
-                  <div class="card-button" style="cursor:pointer">
-                    <div class="panel panel-primary">
-                      <div class="panel-body text-center btn-warning">
-                        <span class="bi bi-box-arrow-in-down icon-big" aria-hidden="true"></span>
-                        <h3>Descargar Comparativo</h3>
+                  <div  style="cursor:pointer" onclick="descargarComparativo(<?= $nroSucursal ?>, <?= $nroConteo ?>)">
+                    <div class="card-button">
+                      <div class="panel panel-primary">
+                        <div class="panel-body text-center btn-warning">
+                          <span class="bi bi-box-arrow-in-down icon-big" aria-hidden="true"></span>
+                          <h3>Descargar Comparativo</h3>
+                        </div>
                       </div>
                     </div>
                   </div>
+
                 </div>
 
                 <div class="cards-row-2">
@@ -163,16 +168,16 @@ if (!isset($_SESSION['username'])) {
                     </div>
                   </form>
                 
-                  <form action="controller/exportar.php" style="cursor:pointer">
+                  <div onlick="descargarConteo(<?= $nroSucursal ?>)"  style="cursor:pointer">
                     <div class="card-button">
                       <div class="panel panel-primary">
                         <div class="panel-body text-center btn-success btn_inventario">
                           <span class="glyphicon glyphicon-save icon-big" aria-hidden="true"></span>
-                          <h3><button type="submit" style="border:none;color:white;background:none">Descargar Conteo</button></h3>
+                          <h3>Descargar Conteo</h3>
                         </div>
                       </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
                   
                 </div>
@@ -229,6 +234,8 @@ if (!isset($_SESSION['username'])) {
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     
 </body>
   </body>

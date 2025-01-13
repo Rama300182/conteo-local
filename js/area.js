@@ -30,7 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function buscarArea(e) {
       e.preventDefault();
       let ubicacion = area.value;
-      fetch(`controller/ubicacion.php?area=${encodeURIComponent(ubicacion)}`)
+      let idEnc = document.querySelector("#idEnc").textContent
+      fetch(`controller/ubicacion.php?area=${encodeURIComponent(ubicacion)}&idEnc=${idEnc}`)
           .then(response => response.json())
           .then(data => {
               if (data.status === 'error') {
@@ -41,44 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
                   });
                   cancel.play();
               } else {
-                  buscarAreaInventarioFinal(ubicacion);
+                window.location.href = `recoleccion.php?area=${encodeURIComponent(ubicacion)}&idEnc=${idEnc}`;
+                 
               }
           })
-          .catch(error => {
-              console.error('Error:', error);
-              Swal.fire({
-                  icon: "error",
-                  title: "Error",
-                  text: "Hubo un problema al buscar la ubicación: " + error.message
-              });
-          });
   }
 
-  function buscarAreaInventarioFinal(ubicacion) {
-      fetch(`controller/ubicacion.php?ubicacion=${encodeURIComponent(ubicacion)}&numsuc=${numsuc}`)
-          .then(response => response.json())
-          .then(data => {
-              console.log("Respuesta del servidor:", data); // Para depuración
-              if (data.status === 'error') {
-                  Swal.fire({
-                      icon: "error",
-                      title: "Error",
-                      text: data.mensaje
-                  });
-                  cancel.play();
-              } else if (data.status === 'success' && data.mensaje === 'ok') {
-                  window.location.href = `recoleccion.php?area=${encodeURIComponent(ubicacion)}`;
-              } else {
-                  throw new Error('Respuesta inesperada del servidor');
-              }
-          })
-          .catch(error => {
-              console.error('Error detallado:', error);
-              Swal.fire({
-                  icon: "error",
-                  title: "Error",
-                  text: "Hubo un problema al verificar el inventario: " + error.message
-              });
-          });
-  }
 });

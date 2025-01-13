@@ -1,8 +1,12 @@
 <?php
 include '../Class/conexion.php';
 
-$cid = new Conexion();
-$cid = $cid->conectar();
+$conexion = new Conexion();
+
+$cid = $conexion->conectar('central');
+
+$cid2 = $conexion->conectar('localhost');
+
 
 header('Content-Type: application/json');
 
@@ -11,50 +15,79 @@ function responder($status, $mensaje) {
     exit;
 }
 
-if (isset($_GET['area'])) {
-    $area = $_GET['area'];
 
-    try {
-        $sql = "SELECT TOP 1 * FROM UBICACION WHERE Cod_Ubicacion = ?";
-        $params = array($area);
-        $stmt = sqlsrv_query($cid, $sql, $params);
+$area = $_GET['area'];
+$idEnc = $_GET['idEnc'];
 
-        if ($stmt === false) {
-            throw new Exception(print_r(sqlsrv_errors(), true));
-        }
+try {
 
-        if ($row = sqlsrv_fetch_array($stmt)) {
-            responder('success', $row['Cod_Ubicacion']);
-        } else {
-            responder('error', 'Ubicación no encontrada');
-        }
-    } catch (Exception $e) {
-        responder('error', 'Se produjo un Error: ' . $e->getMessage());
+   
+    $sql2 = "WITH CheckAreaRange AS (
+        SELECT 
+            CASE 
+                WHEN $area >= CAST(SUBSTRING(AREA, 1, CHARINDEX('-', AREA) - 1) AS INT)
+                AND $area <= CAST(SUBSTRING(AREA, CHARINDEX('-', AREA) + 1, LEN(AREA)) AS INT)
+                THEN 1
+                ELSE 0
+            END AS isInRange,
+            AREA
+        FROM RO_ENC_CONTEO_LOCAL
+        WHERE id = '$idEnc'
+    ),
+    CheckAreaExclusion AS (
+        SELECT 
+            CASE 
+                WHEN $area NOT IN (
+                    SELECT DISTINCT AREA
+                    FROM RO_DET_CONTEO_LOCAL
+                    WHERE ID_CONT = '$idEnc'
+                )
+                THEN 1
+                ELSE 0
+            END AS isExcluded,
+            AREA
+        FROM RO_ENC_CONTEO_LOCAL
+        WHERE id = '$idEnc'
+    )
+    SELECT 
+        CASE
+            WHEN isInRange = 0 THEN 'La ubicación no existe en el maestro'
+            WHEN isExcluded = 0 THEN 'La ubicación ya fue escaneada'
+            ELSE 'Área válida'
+        END AS validationResult
+    FROM CheckAreaRange
+    JOIN CheckAreaExclusion
+    ON CheckAreaRange.AREA = CheckAreaExclusion.AREA;
+    ";
+
+
+
+    $result = sqlsrv_query($cid2, $sql2);
+
+
+    if ($result === false) {
+        responder('error', 'Error en la consulta');
     }
-} elseif (isset($_GET['ubicacion']) && isset($_GET['numsuc'])) {
-    $ubicacion = $_GET['ubicacion'];
-    $numsuc = intval($_GET['numsuc']); // Convertir a entero
 
-    try {
-        $sql = "SELECT TOP 1 * FROM SOF_INVENTARIO_FINAL_LOCAL WHERE AREA = ? AND SUCURSAL = ?";
-        $params = array($ubicacion, $numsuc);
-        $stmt = sqlsrv_query($cid, $sql, $params);
+    $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
-        if ($stmt === false) {
-            throw new Exception(print_r(sqlsrv_errors(), true));
-        }
+    $data = [];
 
-        if ($row = sqlsrv_fetch_array($stmt)) {
-            responder('error', 'Ya existe un conteo para esta ubicación');
-        } else {
-            responder('success', 'ok');
-        }
-    } catch (Exception $e) {
-        responder('error', 'Se produjo un Error: ' . $e->getMessage());
+
+    if($row['validationResult'] == 'Área válida') {
+        $data['status'] = 'success';
+        $data['mensaje'] = 'Área válida';
+    } else {
+        $data['status'] = 'error';
+        $data['mensaje'] = $row['validationResult'];
     }
-} else {
-    responder('error', 'Parámetros incorrectos');
-}
+
+    echo json_encode($data);
+
+
+} catch (\Throwable $th) {
+    //throw $th;
+    }
 
 sqlsrv_close($cid);
 ?>

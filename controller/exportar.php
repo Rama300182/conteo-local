@@ -15,7 +15,7 @@ if (!isset($_GET['numsuc'])) {
 $numsuc = intval($_GET['numsuc']);
 
 $conexion = new Conexion();
-$cid = $conexion->conectar();
+$cid = $conexion->conectar('central');
 
 if ($cid === false) {
     echo json_encode(["status" => "error", "message" => "Error de conexión a la base de datos."]);

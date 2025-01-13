@@ -29,15 +29,18 @@ async function buscarCodigo(e) {
   if (e.key === 'Enter' || e.keyCode === 13) {
     const articulo = e.target.value;
     try {
-      const response = await fetch(`controller/articulos.php?codigo=${articulo}`);
-      const data = await response.json();
-      
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      
-      console.log(data);
-      agregarFila(data.cod_articu, data.descripcio);
+
+      let data = localStorage.getItem("maestroArticulos");
+
+      data = JSON.parse(data);
+
+      data.forEach(element => {
+        if(element.COD_ARTICU == articulo || element.SINONIMO == articulo){
+          agregarFila(element.COD_ARTICU, element.DESCRIPCIO);
+        }
+   
+      });
+
     } catch (error) {
       console.error("Error al procesar la respuesta:", error);
       Swal.fire("Código inexistente", "", "error");
@@ -122,11 +125,12 @@ function guardarConteo() {
       usuario,
       ubicacion,
       numsuc,
+      descripcion: row.cells[1].textContent
     });
   });
 
   if (conteoArticulos.length > 0) {
-    guardarInformacion(conteoArticulos);
+    guardarDetalle(conteoArticulos);
   } else {
     Swal.fire({
       icon: "info",
@@ -136,49 +140,36 @@ function guardarConteo() {
   }
 }
 
-async function guardarInformacion(conteoArticulos) {
+async function guardarDetalle (conteoArticulos) {
+
   const codigos = JSON.stringify(conteoArticulos);
-  const numsuc = document.getElementById("numsuc").value;
-  
-  try {
-    const response = await fetch(`./controller/procesar.php?codigos=${codigos}&numsuc=${numsuc}`);
-    const data = await response.text();
-    
-    if (data.toLowerCase().includes("error")) {
-      throw new Error(data);
-    }
-    
-    await Swal.fire({
-      icon: "success",
-      title: "Datos agregados exitosamente!",
-      text: data,
-      showConfirmButton: false,
-      timer: 1500
-    });
-    
-    // Si tienes un sonido de éxito, asegúrate de que esté definido
-    if (typeof success !== 'undefined' && success instanceof Audio) {
-      success.play();
-    }
-    
-    // Redirigir después de un breve retraso para asegurar que el usuario vea el mensaje
-    setTimeout(() => {
-      window.location.href = "index.php";
-    }, 1500);
-  } catch (error) {
-    console.error("Error al guardar información:", error);
-    await Swal.fire({
-      icon: "error",
-      title: "Error de carga",
-      text: "Hubo un problema al procesar la solicitud: " + error.message,
-    });
-    
-    // Si tienes un sonido de error, asegúrate de que esté definido
-    if (typeof cancel !== 'undefined' && cancel instanceof Audio) {
-      cancel.play();
-    }
-  }
+  const numSuc = document.getElementById("numsuc").value;
+  const area  = document.querySelector("#ubicacion").value;
+  const idEnc = document.querySelector("#idEnc").value;
+  const usuario = document.querySelector("#usuario").value
+
+
+
+  $.ajax({
+    url: "controller/guardarDetalle.php",
+    method: "POST",
+    data: {
+      codigos: codigos,
+      numSuc: numSuc,
+      area: area,
+      idEnc: idEnc,
+      usuario: usuario
+    },
+    success: function (response) {
+      if(response){
+        checkCompletado();
+ 
+      }
+    } 
+  })
+
 }
+
 
 function cancelar() {
   console.log("Función cancelar ejecutada"); // Para depuración
@@ -212,3 +203,47 @@ const observer = new MutationObserver((mutations) => {
 });
 
 observer.observe(tabla, { childList: true, subtree: true });
+
+
+const checkCompletado = () => {
+
+  const idEnc = document.querySelector("#idEnc").value;
+
+
+  $.ajax({
+    url: "controller/checkCompletado.php",
+    method: "POST",
+    data: {
+      nroConteo: idEnc
+    },
+    success: function (response) {
+      if(response == 1 || response == true){
+        window.location.href = `menu.php`;
+      }else{
+        window.location.href = `index.php?idEnc=${idEnc}`;
+      }
+
+    } })
+
+} 
+
+
+
+const traerMaestroArticulos = () => {
+
+  const numSuc = document.getElementById("numsuc").value;
+
+  $.ajax({
+    url: "controller/traerMaestroArticulos.php",
+    method: "POST",
+    data: {
+      numSuc: numSuc
+    },
+    success: function (response) {
+      localStorage.setItem("maestroArticulos", response)
+
+    } })
+
+}
+
+traerMaestroArticulos();
